@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. FastAPI Web Server & HITL Approval Portal
+  ai-employee-api:
+    build: .
+    container_name: ai-employee-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - REDIS_URL=redis://redis:6379/0
+      - PORT=8000
+    depends_on:
+      - redis
+    volumes:
+      - ./secrets:/app/secrets:ro
+    command: ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  # 2. Autonomous Background Worker & Scheduler
+  ai-employee-scheduler:
+    build: .
+    container_name: ai-employee-scheduler
+    restart: unless-stopped
+    environment:
+      - APP_ENV=production
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - ./secrets:/app/secrets:ro
+    command: ["python", "-m", "src.workers.scheduler"]
+
+  # 3. High Performance Redis Cache & Message Broker
+  redis:
+    image: redis:7-alpine
+    container_name: ai-employee-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
