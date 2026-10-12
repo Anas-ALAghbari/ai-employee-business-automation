@@ -4,7 +4,7 @@
 [![Notion Connected](https://img.shields.io/badge/Notion-Workspace%20Connected-000000?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%20%7C%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Tests Passing](https://img.shields.io/badge/Tests-19%2F19%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
+[![Tests Passing](https://img.shields.io/badge/Tests-20%2F20%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
 [![License: Commercial](https://img.shields.io/badge/License-Commercial-blue?style=for-the-badge)](#-commercial-license--ownership)
 
 **🧑💼 AI Employee / Business Automation** is an enterprise-grade autonomous digital worker designed and engineered by **Anas AL-Aghbari** as part of the **AI Systems & Autonomous Agents Portfolio**.
