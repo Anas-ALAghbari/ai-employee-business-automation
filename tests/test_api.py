@@ -29,7 +29,7 @@ def test_dashboard_html():
     response = client.get("/dashboard")
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
-    assert "Executive Command Dashboard" in response.text
+    assert "مركز القيادة التنفيذي" in response.text
 
 
 def test_process_single_email_api():
