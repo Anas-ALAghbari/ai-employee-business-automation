@@ -72,6 +72,25 @@ def test_process_high_risk_quote_triggers_approval():
     assert len(email_service.drafts) == 1
 
 
+def test_process_billing_invoice_inquiry():
+    engine, email_service, crm_service, memory_service = setup_engine()
+
+    msg = EmailMessage(
+        sender="finance@partner.com",
+        recipient="billing@company.com",
+        subject="Invoice Payment Status and Receipt Request",
+        body="Hi, could you send the latest receipt and payment portal link for our invoice?",
+    )
+
+    decision = engine.process_incoming_email(msg)
+
+    assert decision.intent == IntentType.BILLING_DISPUTE
+    assert decision.risk_level == RiskLevel.LOW
+    assert decision.requires_approval is False
+    assert "one-click payment" in decision.drafted_response
+    assert len(email_service.sent_emails) == 1
+
+
 def test_process_prompt_injection_blocked():
     engine, email_service, crm_service, memory_service = setup_engine()
 

@@ -116,6 +116,11 @@ class AIEmployeeEngine:
             risk_level = RiskLevel.LOW
             requires_approval = False
             rationale = "General inquiry matched in corporate knowledge base"
+        elif any(term in subject_lower or term in body_lower for term in ["invoice", "payment", "bill", "receipt", "overdue"]):
+            intent = IntentType.BILLING_DISPUTE
+            risk_level = RiskLevel.LOW
+            requires_approval = False
+            rationale = "Invoice and payment transaction inquiry"
         elif any(term in subject_lower or term in body_lower for term in ["bug", "issue", "error", "broken", "support"]):
             intent = IntentType.SUPPORT_TICKET
             risk_level = RiskLevel.LOW
@@ -228,6 +233,15 @@ class AIEmployeeEngine:
                 "I have prepared an initial enterprise review package and escalated this to your "
                 "dedicated Account Executive, who will reach out shortly to finalize details.\n\n"
                 "Best regards,\nEnterprise Solutions Desk"
+            )
+
+        if intent == IntentType.BILLING_DISPUTE:
+            return (
+                "Hello,\n\nThank you for contacting billing operations.\n\n"
+                "We have verified your account billing ledger. Invoices can be reviewed and settled "
+                "directly via your customer portal with instant one-click payment (Credit Card / Bank Transfer).\n\n"
+                "If you need an updated formal statement or tax invoice, our accounts team will provide it shortly.\n\n"
+                "Best regards,\nFinance & Accounts Desk"
             )
 
         if intent == IntentType.SUPPORT_TICKET:
