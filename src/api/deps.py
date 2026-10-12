@@ -7,6 +7,7 @@ from src.adapters.crm.notion_adapter import NotionAdapter
 from src.adapters.email.gmail_adapter import GmailAdapter
 from src.adapters.email.mock_email_adapter import MockEmailAdapter
 from src.adapters.memory.vector_memory_adapter import KnowledgeMemoryAdapter
+from src.adapters.notifications.telegram_adapter import TelegramNotificationAdapter
 from src.agent.brain import AIEmployeeEngine
 from src.config import settings
 
@@ -22,12 +23,14 @@ else:
     crm_service = MockCRMAdapter()
 
 memory_service = KnowledgeMemoryAdapter()
+notification_service = TelegramNotificationAdapter()
 
 # Central Engine Instance
 engine = AIEmployeeEngine(
     email_service=email_service,
     crm_service=crm_service,
     memory_service=memory_service,
+    notification_service=notification_service,
 )
 
 

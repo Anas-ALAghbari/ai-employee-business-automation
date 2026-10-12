@@ -49,3 +49,36 @@ def test_mock_crm_adapter_operations():
 
     open_tasks = crm.list_open_tasks()
     assert len(open_tasks) == 1
+
+
+def test_telegram_notification_adapter():
+    from src.adapters.notifications.telegram_adapter import TelegramNotificationAdapter
+    from src.core.enums import RiskLevel
+    from src.core.models import ApprovalRequest, DailyDigestReport
+
+    notifier = TelegramNotificationAdapter()
+
+    # Test approval alert
+    appr = ApprovalRequest(
+        action_type="send_quote",
+        title="Enterprise 500 Seats",
+        description="Requires sign off",
+        proposed_payload={"to": "test@corp.com"},
+        risk_level=RiskLevel.HIGH,
+    )
+    assert notifier.send_approval_alert(appr) is True
+    assert len(notifier.sent_notifications) == 1
+
+    # Test daily digest alert
+    digest = DailyDigestReport(
+        date="2026-10-12",
+        total_emails_processed=10,
+        autonomous_actions_count=8,
+        tasks_created=2,
+    )
+    assert notifier.send_daily_digest_alert(digest) is True
+    assert len(notifier.sent_notifications) == 2
+
+    # Test security alert
+    assert notifier.send_security_alert("Prompt Injection Quarantined") is True
+    assert len(notifier.sent_notifications) == 3

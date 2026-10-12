@@ -28,6 +28,7 @@ from src.core.models import (
 from src.ports.crm_port import AbstractCRMService
 from src.ports.email_port import AbstractEmailService
 from src.ports.memory_port import AbstractMemoryService
+from src.ports.notification_port import AbstractNotificationService
 
 
 class AIEmployeeEngine:
@@ -38,10 +39,12 @@ class AIEmployeeEngine:
         email_service: AbstractEmailService,
         crm_service: AbstractCRMService,
         memory_service: AbstractMemoryService,
+        notification_service: AbstractNotificationService | None = None,
     ) -> None:
         self.email_service = email_service
         self.crm_service = crm_service
         self.memory_service = memory_service
+        self.notification_service = notification_service
 
         # Operational metrics tracking
         self.processed_emails_count = 0
@@ -86,6 +89,11 @@ class AIEmployeeEngine:
             self.crm_service.create_task(sec_task)
             self.tasks_created_count += 1
             self.email_service.mark_as_read(email.id)
+
+            if self.notification_service:
+                self.notification_service.send_security_alert(
+                    f"Prompt injection blocked from {email.sender}: {', '.join(detected_patterns)}"
+                )
 
             return AgentDecision(
                 intent=IntentType.SECURITY_ANOMALY,
@@ -171,6 +179,9 @@ class AIEmployeeEngine:
             )
             self.crm_service.create_task(crm_task)
             self.tasks_created_count += 1
+
+            if self.notification_service and approval_request:
+                self.notification_service.send_approval_alert(approval_request)
         else:
             # Autonomous Execution
             self.autonomous_actions_count += 1
@@ -295,4 +306,8 @@ class AIEmployeeEngine:
         )
 
         self.crm_service.save_daily_digest(digest)
+
+        if self.notification_service:
+            self.notification_service.send_daily_digest_alert(digest)
+
         return digest

@@ -4,7 +4,7 @@
 [![Notion Connected](https://img.shields.io/badge/Notion-Workspace%20Connected-000000?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%20%7C%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Tests Passing](https://img.shields.io/badge/Tests-20%2F20%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
+[![Tests Passing](https://img.shields.io/badge/Tests-26%2F26%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
 [![License: Commercial](https://img.shields.io/badge/License-Commercial-blue?style=for-the-badge)](#-commercial-license--ownership)
 
 **🧑💼 AI Employee / Business Automation** is an enterprise-grade autonomous digital worker designed and engineered by **Anas AL-Aghbari** as part of the **AI Systems & Autonomous Agents Portfolio**.
@@ -98,18 +98,22 @@ python scripts/run_demo.py
 
 ### 3. Run Automated Tests
 
-Execute the full automated test suite (19 test cases covering models, guardrails, agent brain, adapters, and API endpoints):
+Execute the full automated test suite (26 test cases covering models, guardrails, agent brain, adapters, mobile notifications, and web API endpoints):
 
 ```bash
 python -m pytest -v
 ```
 
-### 4. Launch FastAPI REST Server
+### 4. Launch Full Web Application & Command Center
 
 ```bash
 uvicorn src.api.main:app --reload --port 8000
 ```
-Visit `http://localhost:8000/docs` to interact with the live Swagger OpenAPI documentation.
+
+Once running, access the portals directly in your browser:
+* 🌐 **Executive Landing Page & ROI Calculator**: [http://localhost:8000/](http://localhost:8000/)
+* 🎛️ **Command Center Dashboard & HITL Queue**: [http://localhost:8000/dashboard](http://localhost:8000/dashboard)
+* 📚 **Interactive Swagger OpenAPI Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ### 5. Launch with Docker Compose
 

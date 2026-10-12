@@ -17,6 +17,21 @@ def test_health_check_endpoint():
     assert "email_mode" in data
 
 
+def test_landing_page_html():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "AI Employee OS" in response.text
+    assert "ROI Calculator" in response.text
+
+
+def test_dashboard_html():
+    response = client.get("/dashboard")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "Executive Command Dashboard" in response.text
+
+
 def test_process_single_email_api():
     payload = {
         "sender": "visitor@acme.org",
@@ -76,3 +91,57 @@ def test_approvals_api():
     act_res = client.post(f"/api/v1/approvals/{approval_id}/action", json=action_payload)
     assert act_res.status_code == 200
     assert act_res.json()["decision"] == "APPROVED"
+
+
+def test_agent_crm_reading_endpoints():
+    res_contacts = client.get("/api/v1/agent/contacts")
+    assert res_contacts.status_code == 200
+    assert isinstance(res_contacts.json(), list)
+
+    res_tasks = client.get("/api/v1/agent/tasks")
+    assert res_tasks.status_code == 200
+    assert isinstance(res_tasks.json(), list)
+
+    res_policies = client.get("/api/v1/agent/policies")
+    assert res_policies.status_code == 200
+    assert isinstance(res_policies.json(), list)
+    assert len(res_policies.json()) > 0
+
+
+def test_whatsapp_webhook_verification():
+    # Valid verification handshake
+    res_valid = client.get(
+        "/api/v1/webhooks/whatsapp",
+        params={
+            "hub.mode": "subscribe",
+            "hub.verify_token": "ai_employee_secret_token",
+            "hub.challenge": "CHALLENGE_CODE_1234",
+        },
+    )
+    assert res_valid.status_code == 200
+    assert res_valid.text == "CHALLENGE_CODE_1234"
+
+    # Invalid token rejected
+    res_invalid = client.get(
+        "/api/v1/webhooks/whatsapp",
+        params={
+            "hub.mode": "subscribe",
+            "hub.verify_token": "wrong_token",
+            "hub.challenge": "FAIL",
+        },
+    )
+    assert res_invalid.status_code == 403
+
+
+def test_whatsapp_incoming_message():
+    payload = {
+        "sender": "+1234567890",
+        "body": "What are your business hours?",
+    }
+    res = client.post("/api/v1/webhooks/whatsapp", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "processed"
+    assert data["channel"] == "whatsapp"
+    assert data["intent"] == "general_inquiry"
+    assert "8:00 AM to 6:00 PM EST" in data["reply"]

@@ -58,6 +58,13 @@ class Settings:
 
         self.redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
+        # Mobile Alert & Notification Configuration (Telegram Bot)
+        self.telegram_bot_token: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
+        self.telegram_chat_id: str = os.getenv("TELEGRAM_CHAT_ID", "")
+
+        # Omnichannel WhatsApp Webhook Configuration
+        self.whatsapp_verify_token: str = os.getenv("WHATSAPP_VERIFY_TOKEN", "ai_employee_secret_token")
+
 
 # Global Singleton Settings Instance
 settings = Settings()

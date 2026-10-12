@@ -101,3 +101,30 @@ def get_operational_stats(
         "autonomous_actions_count": engine.autonomous_actions_count,
         "approvals_triggered_count": engine.approvals_triggered_count,
     }
+
+
+@router.get("/contacts")
+def list_crm_contacts(
+    engine: AIEmployeeEngine = Depends(get_agent_engine),
+) -> list[dict[str, Any]]:
+    """List synced CRM contacts from Notion/CRM."""
+    if hasattr(engine.crm_service, "contacts"):
+        return [contact.model_dump() for contact in engine.crm_service.contacts.values()]
+    return []
+
+
+@router.get("/tasks")
+def list_crm_tasks(
+    engine: AIEmployeeEngine = Depends(get_agent_engine),
+) -> list[dict[str, Any]]:
+    """List tracked operational tasks from Notion/CRM."""
+    tasks = engine.crm_service.list_open_tasks()
+    return [task.model_dump() for task in tasks]
+
+
+@router.get("/policies")
+def list_knowledge_policies(
+    engine: AIEmployeeEngine = Depends(get_agent_engine),
+) -> list[dict[str, Any]]:
+    """List active corporate SOPs and knowledge documents."""
+    return engine.memory_service.search_policies("", top_k=10)
